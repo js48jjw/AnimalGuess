@@ -1,5 +1,6 @@
 import "./globals.css";
 import React from "react";
+import Script from "next/script";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -24,11 +25,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         }}>
           <ins className="kakao_ad_area"
             style={{ display: 'block', width: 160, height: 600 }}
-            data-ad-unit="DAN-22FZ32pop4ueOWVA"
+            data-ad-unit="DAN-dw0XaXYLeei0bqYK"
             data-ad-width="160"
             data-ad-height="600"
           ></ins>
-          <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
+          <Script src="//t1.daumcdn.net/kas/static/ba.min.js" strategy="afterInteractive" />
         </div>
         {/* 우측 고정 광고 */}
         <div style={{
@@ -44,11 +45,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         }}>
           <ins className="kakao_ad_area"
             style={{ display: 'block', width: 160, height: 600 }}
-            data-ad-unit="DAN-enqOhbO6d7Z1BmZl"
+            data-ad-unit="DAN-kTq9g9C4bXqSwbOb"
             data-ad-width="160"
             data-ad-height="600"
           ></ins>
-          <script type="text/javascript" src="//t1.daumcdn.net/kas/static/ba.min.js" async></script>
+          <Script src="//t1.daumcdn.net/kas/static/ba.min.js" strategy="afterInteractive" />
         </div>
         {/* 메인 컨텐츠 */}
         {children}

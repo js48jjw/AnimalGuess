@@ -68,7 +68,7 @@ const GameResult: React.FC<GameResultProps> = ({ tryCount, onRestart }) => {
 
   useEffect(() => {
     buttonRef.current?.focus();
-    const audio = new Audio("/sound/clap bgm.mp3");
+    const audio = new Audio("/sound/Clap BGM.mp3");
     audio.volume = 0.8;
     let isUnmounted = false;
     audio.play().catch(() => {});

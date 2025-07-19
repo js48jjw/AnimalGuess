@@ -33,7 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* 우측 고정 광고 */}
         <div style={{
           position: 'fixed',
-          right: 0,
+          right: 16,
           top: 0,
           height: '100vh',
           width: 160,

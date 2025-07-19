@@ -13,8 +13,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {/* 좌측 고정 광고 */}
         <div style={{
           position: 'fixed',
-          left: 0,
-          top: 0,
+          left: 5,
+          top: 30,
           height: '100vh',
           width: 160,
           display: 'flex',
@@ -34,7 +34,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div style={{
           position: 'fixed',
           right: 16,
-          top: 0,
+          top: 30,
           height: '100vh',
           width: 160,
           display: 'flex',

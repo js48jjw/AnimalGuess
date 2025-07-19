@@ -1,7 +1,7 @@
 {
-  "name": "Number Guess",
+  "name": "Animal Guess",
   "short_name": "Number?",
-  "description": "Number Guess Game",
+  "description": "Animal Guess Game",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

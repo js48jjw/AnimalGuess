@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from "react";
 
 interface GameResultProps {
-  tryCount: number;
   onRestart: () => void;
+  answerAnimal: string;
 }
 
 const Confetti: React.FC = () => (
@@ -63,7 +63,7 @@ const Confetti: React.FC = () => (
   </div>
 );
 
-const GameResult: React.FC<GameResultProps> = ({ tryCount, onRestart }) => {
+const GameResult: React.FC<GameResultProps> = ({ onRestart, answerAnimal }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -91,16 +91,14 @@ const GameResult: React.FC<GameResultProps> = ({ tryCount, onRestart }) => {
       }}
     >
       <Confetti />
-      <div className="text-4xl sm:text-6xl font-extrabold text-yellow-500 dark:text-yellow-300 drop-shadow-lg animate-bounce mb-4">
+      <div className="text-4xl sm:text-6xl font-extrabold text-yellow-500 dark:text-yellow-300 drop-shadow-lg animate-bounce mb-1">
         🎉 축하합니다! 🎉
       </div>
-      <div className="text-lg sm:text-2xl text-gray-700 dark:text-gray-200 mb-2">
-        {tryCount}번 만에 정답을 맞췄어요!
-      </div>
+      <div className="text-2xl sm:text-3xl text-gray-800 dark:text-gray-100 mb-2 font-bold">정답: &quot;{answerAnimal}&quot;</div>
       <button
         type="submit"
         ref={buttonRef}
-        className="px-10 py-4 rounded-full bg-gradient-to-r from-pink-400 to-yellow-400 dark:from-pink-700 dark:to-yellow-700 text-white text-xl sm:text-2xl font-bold shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-yellow-300 dark:focus:ring-yellow-800"
+        className="px-10 py-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 dark:from-purple-700 dark:to-pink-700 text-white text-xl sm:text-2xl font-bold shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-pink-300 dark:focus:ring-pink-800 mt-2"
       >
         다시 하기
       </button>

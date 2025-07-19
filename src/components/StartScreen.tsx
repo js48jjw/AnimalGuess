@@ -11,7 +11,7 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStart }) => (
     </p>
     <button
       onClick={onStart}
-      className="px-10 py-4 rounded-full bg-gradient-to-r from-blue-400 to-cyan-400 dark:from-blue-700 dark:to-cyan-700 text-white text-xl sm:text-2xl font-bold shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-cyan-300 dark:focus:ring-cyan-800 animate-bounce"
+      className="px-10 py-4 rounded-full bg-gradient-to-r from-purple-400 to-violet-400 dark:from-purple-700 dark:to-violet-700 text-white text-xl sm:text-2xl font-bold shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-violet-300 dark:focus:ring-violet-800 animate-bounce"
     >
       Start
     </button>

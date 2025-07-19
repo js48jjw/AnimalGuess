@@ -201,3 +201,9 @@ input, button {
     @apply bg-background text-foreground;
   }
 }
+
+/* 입력값을 ●●●● 등으로 가리는 password-dot 클래스 */
+.password-dot {
+  -webkit-text-security: disc;
+  text-security: disc;
+}

@@ -4,10 +4,13 @@ interface GuessInputProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onGuess: () => void;
+  onHint: () => void;
+  hintDisabled?: boolean;
   disabled?: boolean;
+  hintLoading?: boolean;
 }
 
-const GuessInput: React.FC<GuessInputProps> = ({ value, onChange, onGuess, disabled }) => (
+const GuessInput: React.FC<GuessInputProps> = ({ value, onChange, onGuess, onHint, hintDisabled, disabled, hintLoading }) => (
   <form
     className="flex flex-col items-center gap-4 w-full max-w-xs mx-auto py-8"
     onSubmit={e => {
@@ -15,25 +18,31 @@ const GuessInput: React.FC<GuessInputProps> = ({ value, onChange, onGuess, disab
       if (!disabled) onGuess();
     }}
   >
-    <label className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">숫자를 입력하세요</label>
-    <div className="flex gap-2 w-full justify-center">
-      <input
-        type="number"
-        inputMode="numeric"
-        pattern="[0-9]*"
-        maxLength={4}
-        value={value}
-        onChange={onChange}
-        disabled={disabled}
-        className="w-40 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-2xl text-center tracking-widest font-mono focus:outline-none focus:ring-2 focus:ring-cyan-400 dark:focus:ring-cyan-700 transition-all"
-        placeholder="숫자"
-        autoFocus
-      />
-      <button
-        type="submit"
-        disabled={disabled || value.length === 0}
-        className="px-4 py-2 rounded-lg bg-gradient-to-r from-cyan-400 to-blue-400 dark:from-cyan-700 dark:to-blue-700 text-white font-bold shadow hover:scale-105 active:scale-95 transition-all disabled:opacity-60"
-      >제출</button>
+    <label className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">동물을 입력하세요</label>
+    <button
+      type="button"
+      onClick={onHint}
+      disabled={hintDisabled || disabled}
+      className="w-full py-4 rounded-lg bg-gradient-to-r from-violet-400 to-pink-400 dark:from-violet-700 dark:to-pink-700 text-white text-xl font-bold shadow hover:scale-105 active:scale-95 transition-all disabled:opacity-60 mb-8"
+      style={{ maxWidth: 320 }}
+    >{hintLoading ? '힌트 생성 중...' : '힌트'}</button>
+    <div className="absolute bottom-0 left-0 w-full flex justify-center z-10 pb-8">
+      <div className="flex gap-2">
+        <input
+          type="text"
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          className="w-56 px-4 py-2 rounded-lg border border-purple-300 dark:border-purple-600 bg-white dark:bg-gray-800 text-2xl text-center tracking-widest font-mono focus:outline-none focus:ring-2 focus:ring-violet-400 dark:focus:ring-violet-700 transition-all"
+          placeholder="동물명"
+          autoFocus
+        />
+        <button
+          type="submit"
+          disabled={disabled || value.length === 0}
+          className="px-6 py-2 rounded-full bg-gradient-to-r from-purple-400 to-violet-400 dark:from-purple-700 dark:to-violet-700 text-black font-bold shadow hover:scale-105 active:scale-95 transition-all disabled:opacity-60"
+        >제출</button>
+      </div>
     </div>
   </form>
 );

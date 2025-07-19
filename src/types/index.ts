@@ -1,0 +1,1 @@
+export type HintType = "UP" | "DOWN" | "CORRECT" | null; 

@@ -5,12 +5,13 @@ interface GuessInputProps {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onGuess: () => void;
   onHint: () => void;
+  onRevealAnswer: () => void;
   hintDisabled?: boolean;
   disabled?: boolean;
   hintLoading?: boolean;
 }
 
-const GuessInput: React.FC<GuessInputProps> = ({ value, onChange, onGuess, onHint, hintDisabled, disabled, hintLoading }) => (
+const GuessInput: React.FC<GuessInputProps> = ({ value, onChange, onGuess, onHint, onRevealAnswer, hintDisabled, disabled, hintLoading }) => (
   <form
     className="flex flex-col items-center gap-4 w-full max-w-xs mx-auto py-8"
     onSubmit={e => {
@@ -18,14 +19,22 @@ const GuessInput: React.FC<GuessInputProps> = ({ value, onChange, onGuess, onHin
       if (!disabled) onGuess();
     }}
   >
-    <label className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">동물을 입력하세요</label>
-    <button
-      type="button"
-      onClick={onHint}
-      disabled={hintDisabled || disabled}
-      className="w-full py-4 rounded-lg bg-gradient-to-r from-violet-400 to-pink-400 dark:from-violet-700 dark:to-pink-700 text-white text-xl font-bold shadow hover:scale-105 active:scale-95 transition-all disabled:opacity-60 mb-8"
-      style={{ maxWidth: 320 }}
-    >{hintLoading ? '힌트 생성 중...' : '힌트'}</button>
+    <label className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">동물을 찾아주세요</label>
+    <div className="flex gap-2 w-full justify-end">
+      <button
+        type="button"
+        onClick={onHint}
+        disabled={hintDisabled || disabled}
+        className="flex-1 py-4 rounded-lg bg-gradient-to-r from-violet-400 to-pink-400 dark:from-violet-700 dark:to-pink-700 text-white text-xl font-bold shadow hover:scale-105 active:scale-95 transition-all disabled:opacity-60"
+        style={{ maxWidth: 240 }}
+      >{hintLoading ? '힌트 생성 중...' : '힌트'}</button>
+      <button
+        type="button"
+        onClick={onRevealAnswer}
+        disabled={disabled}
+        className="px-4 py-4 rounded-lg bg-gradient-to-r from-orange-400 to-red-400 dark:from-orange-700 dark:to-red-700 text-white text-sm font-bold shadow hover:scale-105 active:scale-95 transition-all disabled:opacity-60 ml-2"
+      >정답공개</button>
+    </div>
     <div className="absolute bottom-0 left-0 w-full flex justify-center z-10 pb-8">
       <div className="flex gap-2">
         <input

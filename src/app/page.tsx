@@ -18,6 +18,8 @@ export default function HomePage() {
   const [hintCount, setHintCount] = useState(0); // 힌트 사용 횟수
   const [showWrongPopup, setShowWrongPopup] = useState(false); // 오답 팝업
   const [showCorrectPopup, setShowCorrectPopup] = useState(false); // 정답 팝업
+  const wrongPopupTimerRef = useRef<NodeJS.Timeout | null>(null); // 오답 팝업 타이머
+  const correctPopupTimerRef = useRef<NodeJS.Timeout | null>(null); // 정답 팝업 타이머
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const wrongAudioRef = useRef<HTMLAudioElement | null>(null);
   const [usedHints, setUsedHints] = useState<string[]>([]); // 사용한 힌트 목록
@@ -49,20 +51,33 @@ export default function HomePage() {
   const handleGuess = () => {
     if (!targetAnimal) return;
     if (guessValue.trim().length === 0) return;
-    setHintCount(c => c + 1);
     if (guessValue.trim() === targetAnimal) {
+      // 기존 타이머가 있다면 취소
+      if (correctPopupTimerRef.current) {
+        clearTimeout(correctPopupTimerRef.current);
+      }
       setShowCorrectPopup(true);
-      setTimeout(() => setShowCorrectPopup(false), 3000);
+      correctPopupTimerRef.current = setTimeout(() => setShowCorrectPopup(false), 3000);
       setStep("result");
     } else {
+      // 기존 타이머가 있다면 취소
+      if (wrongPopupTimerRef.current) {
+        clearTimeout(wrongPopupTimerRef.current);
+      }
       setShowWrongPopup(true);
       if (wrongAudioRef.current) {
         wrongAudioRef.current.currentTime = 0;
         wrongAudioRef.current.play();
       }
-      setTimeout(() => setShowWrongPopup(false), 3000);
+      wrongPopupTimerRef.current = setTimeout(() => setShowWrongPopup(false), 3000);
     }
     setGuessValue("");
+  };
+
+  // 정답공개
+  const handleRevealAnswer = () => {
+    if (!targetAnimal) return;
+    setStep("result");
   };
 
   // 다시하기
@@ -91,6 +106,7 @@ export default function HomePage() {
       setHintCount(c => c + 1);
     } catch {
       setUsedHints(prev => [...prev, '힌트 생성 실패']);
+      // 힌트 생성 실패 시에는 카운트를 증가시키지 않음
     } finally {
       setHintLoading(false);
     }
@@ -98,8 +114,34 @@ export default function HomePage() {
 
   // 랜덤 동물명 리스트
   const animalList = [
-    "사자", "호랑이", "코끼리", "기린", "고래", "토끼", "여우", "늑대", "곰", "다람쥐",
-    "판다", "하마", "코뿔소", "치타", "캥거루", "고릴라", "수달", "악어", "펭귄", "부엉이"
+    // 포유류 - 반려동물
+    "고양이", "강아지", "햄스터", "기니피그", "토끼", "친칠라", "고슴도치", "알파카",
+    // 포유류 - 농장동물
+    "소", "돼지", "양", "염소", "말", "당나귀", "닭", "오리", "거위", "칠면조",
+    // 포유류 - 야생동물
+    "사자", "호랑이", "코끼리", "기린", "고래", "여우", "늑대", "곰", "다람쥐", "판다",
+    "하마", "코뿔소", "치타", "캥거루", "고릴라", "수달", "코알라", "오랑우탄", "침팬지", "원숭이",
+    "너구리", "스컹크", "오소리", "족제비", "담비", "비버", "카피바라", "바다사자", "물개", "돌고래",
+    // 조류 - 반려조류
+    "앵무새",
+    // 조류 - 야생조류
+    "독수리", "매", "참새", "제비", "공작", "타조", "펭귄", "부엉이", "올빼미", "갈매기",
+    "까마귀", "까치",    
+    // 파충류 - 반려파충류
+    "도마뱀", "이구아나", "카멜레온", "코모도드래곤",
+    // 파충류 - 야생파충류
+    "뱀", "방울뱀", "아나콘다", "보아", "악어", "거북이", "자라", "바다거북",
+    // 양서류
+    "개구리", "두꺼비", "도롱뇽", 
+    // 어류 - 관상어
+    "금붕어", "잉어", "송사리", "구피",
+    // 어류 - 해양어류
+    "상어", "고래상어", "백상아리", "범상어", "블루상어", 
+    // 무척추동물 - 해양생물
+    "문어", "오징어", "낙지", "쭈꾸미", "게", "새우", "랍스터", "가재",
+    // 곤충류
+    "나비", "나방", "벌", "말벌", "개미", "풍뎅이", "잠자리", "매미", "귀뚜라미", "메뚜기",
+    "바퀴벌레", "무당벌레", "사마귀", "딱정벌레", "하늘소", "호랑나비", "거미", "파리"
   ];
   // 랜덤 동물명 입력
   const handleRandomAnimal = () => {
@@ -114,6 +156,18 @@ export default function HomePage() {
       audioRef.current.play();
     }
   }, [step]);
+
+  // 컴포넌트 언마운트 시 타이머 정리
+  useEffect(() => {
+    return () => {
+      if (wrongPopupTimerRef.current) {
+        clearTimeout(wrongPopupTimerRef.current);
+      }
+      if (correctPopupTimerRef.current) {
+        clearTimeout(correctPopupTimerRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-100 via-violet-100 to-pink-50 dark:from-purple-900 dark:via-violet-800 dark:to-purple-900 transition-colors duration-500">
@@ -131,13 +185,29 @@ export default function HomePage() {
                   setTimeout(() => setAdminInputError("") , 2000);
                   return;
                 }
+                // 목록에 있거나 동물로 보이는 단어라면 진행
+                const inputValue = adminValue.trim();
+                if (!animalList.includes(inputValue)) {
+                  // 간단한 동물 여부 검증 (동물 관련 키워드 포함 여부)
+                  const animalKeywords = ['동물', '짐승', '생물', '포유류', '조류', '파충류', '양서류', '어류', '곤충'];
+                  const isLikelyAnimal = animalKeywords.some(keyword => 
+                    inputValue.includes(keyword) || 
+                    inputValue.length >= 2 && inputValue.length <= 10 // 적절한 길이
+                  );
+                  
+                  if (!isLikelyAnimal) {
+                    setAdminInputError("동물을 입력해 주세요");
+                    setTimeout(() => setAdminInputError("") , 2000);
+                    return;
+                  }
+                }
                 handleSetAnimal();
               }}
               onRandom={handleRandomAnimal}
               disabled={false}
             />
             {adminInputError && (
-              <div className="mt-2 text-red-500 text-base font-semibold animate-fade-in">{adminInputError}</div>
+              <div className="mt-2 text-red-500 text-2xl sm:text-3xl font-bold animate-fade-in">{adminInputError}</div>
             )}
           </>
         )}
@@ -148,6 +218,7 @@ export default function HomePage() {
               onChange={e => setGuessValue(e.target.value)}
               onGuess={handleGuess}
               onHint={handleHint}
+              onRevealAnswer={handleRevealAnswer}
               hintDisabled={hintLoading}
               disabled={false}
               hintLoading={hintLoading}
@@ -161,7 +232,7 @@ export default function HomePage() {
         {usedHints.length > 0 && (
           <div className="my-0 w-[98vw] sm:w-[800px] flex flex-col gap-2">
             {usedHints.map((h, i) => (
-              <div key={i} className="text-lg sm:text-xl text-yellow-600 dark:text-yellow-300 bg-yellow-50 dark:bg-gray-900 rounded px-3 py-2 shadow animate-fade-in whitespace-nowrap overflow-x-auto">
+              <div key={i} className="text-lg sm:text-xl text-yellow-600 dark:text-yellow-300 bg-yellow-50 dark:bg-gray-900 rounded px-3 py-2 shadow animate-fade-in whitespace-nowrap w-fit min-w-full">
                 힌트 {i + 1}. {h}
               </div>
             ))}

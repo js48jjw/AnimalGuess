@@ -84,21 +84,21 @@ const GameResult: React.FC<GameResultProps> = ({ onRestart, answerAnimal }) => {
 
   return (
     <form
-      className="relative flex flex-col items-center justify-center min-h-[60vh] gap-8"
+      className="relative flex flex-col items-center justify-center min-h-[30vh] gap-2 mt-2"
       onSubmit={e => {
         e.preventDefault();
         onRestart();
       }}
     >
       <Confetti />
-      <div className="text-4xl sm:text-6xl font-extrabold text-yellow-500 dark:text-yellow-300 drop-shadow-lg animate-bounce mb-1">
+      <div className="text-3xl sm:text-5xl font-extrabold text-yellow-500 dark:text-yellow-300 drop-shadow-lg animate-bounce mb-2">
         🎉 축하합니다! 🎉
       </div>
-      <div className="text-2xl sm:text-3xl text-gray-800 dark:text-gray-100 mb-2 font-bold">정답: &quot;{answerAnimal}&quot;</div>
+      <div className="text-2xl sm:text-3xl text-black dark:text-white mb-2 font-extrabold">정답: <span className='text-black dark:text-white'>&quot;{answerAnimal}&quot;</span></div>
       <button
         type="submit"
         ref={buttonRef}
-        className="px-10 py-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 dark:from-purple-700 dark:to-pink-700 text-white text-xl sm:text-2xl font-bold shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-pink-300 dark:focus:ring-pink-800 mt-2"
+        className="px-10 py-4 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 dark:from-purple-700 dark:to-pink-700 text-white text-xl sm:text-2xl font-bold shadow-lg hover:scale-105 active:scale-95 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-pink-300 dark:focus:ring-pink-800 mt-0"
       >
         다시 하기
       </button>

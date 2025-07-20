@@ -23,7 +23,7 @@ const AdminInput: React.FC<AdminInputProps> = ({ value, onChange, onSetNumber, o
         value={value}
         onChange={onChange}
         disabled={disabled}
-        className="w-64 px-4 py-2 rounded-lg border border-purple-300 dark:border-purple-600 bg-white dark:bg-gray-800 text-2xl text-center tracking-widest font-mono password-dot focus:outline-none focus:ring-2 focus:ring-violet-400 dark:focus:ring-violet-700 transition-all"
+        className="w-48 px-4 py-2 rounded-lg border border-purple-300 dark:border-purple-600 bg-white dark:bg-gray-800 text-2xl text-center tracking-widest font-mono password-dot focus:outline-none focus:ring-2 focus:ring-violet-400 dark:focus:ring-violet-700 transition-all"
         placeholder="비공개 입력"
         autoFocus
       />
@@ -31,8 +31,8 @@ const AdminInput: React.FC<AdminInputProps> = ({ value, onChange, onSetNumber, o
         type="button"
         onClick={onRandom}
         disabled={disabled}
-        className="px-3 py-2 rounded-lg bg-gradient-to-r from-purple-400 to-violet-400 dark:from-purple-700 dark:to-violet-700 text-white font-bold shadow hover:scale-105 active:scale-95 transition-all disabled:opacity-60"
-      >랜덤</button>
+        className="px-3 py-2 rounded-lg bg-gradient-to-r from-purple-400 to-violet-400 dark:from-purple-700 dark:to-violet-700 text-white font-bold shadow hover:scale-105 active:scale-95 transition-all disabled:opacity-60 text-sm"
+      >랜덤생성</button>
     </div>
     <button
       type="submit"

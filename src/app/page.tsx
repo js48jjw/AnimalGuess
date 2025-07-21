@@ -227,15 +227,6 @@ export default function HomePage() {
                 className="px-4 py-4 rounded-lg bg-gradient-to-r from-orange-400 to-red-400 dark:from-orange-700 dark:to-red-700 text-white text-sm font-bold shadow hover:scale-105 active:scale-95 transition-all disabled:opacity-60 ml-2"
               >정답공개</button>
             </div>
-            {usedHints.length > 0 && (
-              <div className="my-0 w-[98vw] sm:w-[800px] flex flex-col gap-2">
-                {usedHints.map((h, i) => (
-                  <div key={i} className="text-lg sm:text-xl text-yellow-600 dark:text-yellow-300 bg-yellow-50 dark:bg-gray-900 rounded px-3 py-2 shadow animate-fade-in whitespace-nowrap w-fit min-w-full">
-                    힌트 {i + 1}. {h}
-                  </div>
-                ))}
-              </div>
-            )}
             <form
               className="flex flex-col items-center gap-4 w-full max-w-xs mx-auto py-8"
               onSubmit={e => {
@@ -262,21 +253,17 @@ export default function HomePage() {
           </>
         )}
         {step === "result" && (
-          <>
-            <GameResult onRestart={handleRestart} answerAnimal={targetAnimal || ''} />
-            {usedHints.length > 0 && (
-              <div className="mt-8 flex flex-col gap-2 items-center">
-                {usedHints.map((h, i) => (
-                  <div
-                    key={i}
-                    className="text-lg sm:text-xl text-yellow-600 dark:text-yellow-300 bg-yellow-50 dark:bg-gray-900 rounded px-3 py-2 shadow animate-fade-in w-fit min-w-full max-w-[800px] whitespace-nowrap mx-auto text-left"
-                  >
-                    힌트 {i + 1}. {h}
-                  </div>
-                ))}
+          <GameResult onRestart={handleRestart} answerAnimal={targetAnimal || ''} />
+        )}
+        {/* 힌트 박스는 플레이/정답 화면 모두에서 한 번만 렌더링 */}
+        {(step === "play" || step === "result") && usedHints.length > 0 && (
+          <div className="my-0 w-[98vw] sm:w-[800px] flex flex-col gap-2">
+            {usedHints.map((h, i) => (
+              <div key={i} className="text-lg sm:text-xl text-yellow-600 dark:text-yellow-300 bg-yellow-50 dark:bg-gray-900 rounded px-3 py-2 shadow animate-fade-in w-fit min-w-full whitespace-nowrap">
+                힌트 {i + 1}. {h}
               </div>
-            )}
-          </>
+            ))}
+          </div>
         )}
         {hintLimitError && (
           <div className="fixed top-1/3 left-1/2 -translate-x-1/2 bg-pink-500 text-white px-8 py-4 rounded-xl shadow-lg text-3xl font-bold z-50 animate-fade-in">

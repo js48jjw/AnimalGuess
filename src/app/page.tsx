@@ -5,7 +5,6 @@ import TitleHeader from "../components/TitleHeader";
 import StartScreen from "../components/StartScreen";
 import AdminInput from "../components/AdminInput";
 import GameResult from "../components/GameResult";
-import { fetchGeminiHint } from "../lib/utils";
 
 // step: 'ready' | 'admin' | 'play' | 'result'
 export default function HomePage() {
@@ -25,6 +24,7 @@ export default function HomePage() {
   const [hintLoading, setHintLoading] = useState(false); // 힌트 로딩 상태
   const [hintLimitError, setHintLimitError] = useState("");
   const [validatingAnimal, setValidatingAnimal] = useState(false); // 동물 유효성 검사 로딩 상태
+  const [retryCount, setRetryCount] = useState(0);
 
   // 준비화면 → 관리자 동물 입력
   const handleStart = () => {
@@ -123,6 +123,40 @@ export default function HomePage() {
     setUsedHints([]);
   };
 
+  // 힌트 요청 (재시도 포함)
+  const fetchHintWithRetry = async (animal: string, usedHints: string[], retries = 0): Promise<string> => {
+    try {
+      const response = await fetch('/api/gemini-hint', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ animal, usedHints }),
+      });
+
+      if (response.status === 429 && retries < 3) {
+        // 3초 대기 후 재시도
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        setRetryCount(retries + 1);
+        return fetchHintWithRetry(animal, usedHints, retries + 1);
+      }
+
+      if (!response.ok) {
+        throw new Error('힌트 생성 실패');
+      }
+
+      const data = await response.json();
+      setRetryCount(0);
+      return data.hint;
+    } catch (error) {
+      if (retries < 3) {
+        // 일반 오류도 재시도
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        setRetryCount(retries + 1);
+        return fetchHintWithRetry(animal, usedHints, retries + 1);
+      }
+      throw error;
+    }
+  };
+
   // 힌트 요청
   const handleHint = async () => {
     if (hintCount >= 6) {
@@ -132,14 +166,18 @@ export default function HomePage() {
     }
     if (hintLoading) return;
     setHintLoading(true);
+    setRetryCount(0);
+
     try {
       if (!targetAnimal) throw new Error('정답 동물이 설정되지 않음');
-      const newHint = await fetchGeminiHint(targetAnimal, usedHints);
-      setUsedHints(prev => [...prev, newHint]);
-      setHintCount(c => c + 1);
+      const newHint = await fetchHintWithRetry(targetAnimal, usedHints);
+      if (newHint) {  // 힌트가 성공적으로 생성된 경우에만 추가
+        setUsedHints(prev => [...prev, newHint]);
+        setHintCount(c => c + 1);
+      }
     } catch {
-      setUsedHints(prev => [...prev, '힌트 생성 실패']);
-      // 힌트 생성 실패 시에는 카운트를 증가시키지 않음
+      // 실패 메시지를 추가하지 않음
+      console.error('힌트 생성 실패');
     } finally {
       setHintLoading(false);
     }
@@ -235,7 +273,13 @@ export default function HomePage() {
                 disabled={hintLoading}
                 className="flex-1 py-4 rounded-lg bg-gradient-to-r from-violet-400 to-pink-400 dark:from-violet-700 dark:to-pink-700 text-white text-xl font-bold shadow hover:scale-105 active:scale-95 transition-all disabled:opacity-60"
                 style={{ minWidth: 180, maxWidth: 320, width: '100%' }}
-              >{hintLoading ? '힌트 생성 중...' : '힌트'}</button>
+              >
+                {hintLoading ? (
+                  retryCount > 0 ? 
+                    `재시도 중... (${retryCount}/3)` : 
+                    '힌트 생성 중...'
+                ) : '힌트'}
+              </button>
               <button
                 type="button"
                 onClick={handleRevealAnswer}

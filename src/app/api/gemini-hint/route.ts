@@ -26,6 +26,9 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
     });
     if (!geminiRes.ok) {
+      if (geminiRes.status === 429) {
+        return NextResponse.json({ error: 'RATE_LIMIT' }, { status: 429 });
+      }
       return NextResponse.json({ error: 'Gemini API 호출 실패' }, { status: 500 });
     }
     const data = await geminiRes.json();

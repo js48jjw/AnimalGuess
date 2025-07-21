@@ -4,7 +4,7 @@ export async function POST(req: NextRequest) {
   try {
     const { animal, usedHints = [] } = await req.json();
     const apiKey = process.env.GEMINI_API_KEY;
-    const model = 'gemini-1.5-flash-latest';
+    const model = 'gemini-2.0-flash-lite';
     if (!apiKey) return NextResponse.json({ error: 'Gemini API 키가 없습니다.' }, { status: 500 });
 
     const prompt = `다음 동물에 대해 한국어로 한 가지 힌트만 간결하게 제공해줘.

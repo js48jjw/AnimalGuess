@@ -4,7 +4,7 @@ export async function POST(req: NextRequest) {
   try {
     const { animal } = await req.json();
     const apiKey = process.env.GEMINI_API_KEY;
-    const model = 'gemini-1.5-flash-latest'; 
+    const model = 'gemini-2.0-flash-lite'; 
 
     if (!apiKey) {
       return NextResponse.json({ error: 'Gemini API 키가 없습니다.' }, { status: 500 });

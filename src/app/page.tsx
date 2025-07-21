@@ -265,9 +265,12 @@ export default function HomePage() {
           <>
             <GameResult onRestart={handleRestart} answerAnimal={targetAnimal || ''} />
             {usedHints.length > 0 && (
-              <div className="mt-8 w-[98vw] sm:w-[800px] flex flex-col gap-2 items-center">
+              <div className="mt-8 w-full flex flex-col gap-2 items-center">
                 {usedHints.map((h, i) => (
-                  <div key={i} className="text-lg sm:text-xl text-yellow-600 dark:text-yellow-300 bg-yellow-50 dark:bg-gray-900 rounded px-3 py-2 shadow animate-fade-in w-full max-w-xl text-center">
+                  <div
+                    key={i}
+                    className="text-lg sm:text-xl text-yellow-600 dark:text-yellow-300 bg-yellow-50 dark:bg-gray-900 rounded px-3 py-2 shadow animate-fade-in w-full text-center whitespace-nowrap"
+                  >
                     힌트 {i + 1}. {h}
                   </div>
                 ))}

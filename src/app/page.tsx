@@ -24,6 +24,7 @@ export default function HomePage() {
   const [usedHints, setUsedHints] = useState<string[]>([]); // 사용한 힌트 목록
   const [hintLoading, setHintLoading] = useState(false); // 힌트 로딩 상태
   const [hintLimitError, setHintLimitError] = useState("");
+  const [validatingAnimal, setValidatingAnimal] = useState(false); // 동물 유효성 검사 로딩 상태
 
   // 준비화면 → 관리자 동물 입력
   const handleStart = () => {
@@ -36,13 +37,46 @@ export default function HomePage() {
   };
 
   // 관리자 동물명 입력 완료
-  const handleSetAnimal = () => {
-    if (adminValue.trim().length > 0) {
-      setTargetAnimal(adminValue.trim());
-      setStep("play");
-      setGuessValue("");
-      setHintCount(0);
-      setUsedHints([]);
+  const handleSetAnimal = async () => {
+    const inputValue = adminValue.trim();
+    if (!inputValue || !/[가-힣]/.test(inputValue)) {
+      setAdminInputError("한글로 입력하세요");
+      setTimeout(() => setAdminInputError(""), 2000);
+      return;
+    }
+
+    setValidatingAnimal(true);
+    setAdminInputError("");
+
+    try {
+      const response = await fetch('/api/validate-animal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ animal: inputValue }),
+      });
+
+      if (!response.ok) {
+        throw new Error('API 검증 실패');
+      }
+
+      const { isAnimal } = await response.json();
+
+      if (isAnimal) {
+        setTargetAnimal(inputValue);
+        setStep("play");
+        setGuessValue("");
+        setHintCount(0);
+        setUsedHints([]);
+      } else {
+        setAdminInputError("동물을 입력해 주세요.");
+        setTimeout(() => setAdminInputError(""), 2000);
+      }
+    } catch (error) {
+      console.error(error);
+      setAdminInputError("판별 중 오류 발생");
+      setTimeout(() => setAdminInputError(""), 2000);
+    } finally {
+      setValidatingAnimal(false);
     }
   };
 
@@ -142,6 +176,7 @@ export default function HomePage() {
     "나비", "나방", "벌", "말벌", "개미", "풍뎅이", "잠자리", "매미", "귀뚜라미", "메뚜기",
     "바퀴벌레", "무당벌레", "사마귀", "딱정벌레", "하늘소", "호랑나비", "거미", "파리"
   ];
+
   // 랜덤 동물명 입력
   const handleRandomAnimal = () => {
     const random = animalList[Math.floor(Math.random() * animalList.length)];
@@ -178,35 +213,15 @@ export default function HomePage() {
             <AdminInput
               value={adminValue}
               onChange={e => setAdminValue(e.target.value)}
-              onSetNumber={() => {
-                if (!adminValue.trim() || !/[가-힣]/.test(adminValue)) {
-                  setAdminInputError("한글로 입력하세요");
-                  setTimeout(() => setAdminInputError("") , 2000);
-                  return;
-                }
-                // 목록에 있거나 동물로 보이는 단어라면 진행
-                const inputValue = adminValue.trim();
-                if (!animalList.includes(inputValue)) {
-                  // 간단한 동물 여부 검증 (동물 관련 키워드 포함 여부)
-                  const animalKeywords = ['동물', '짐승', '생물', '포유류', '조류', '파충류', '양서류', '어류', '곤충'];
-                  const isLikelyAnimal = animalKeywords.some(keyword => 
-                    inputValue.includes(keyword) || 
-                    inputValue.length >= 2 && inputValue.length <= 10 // 적절한 길이
-                  );
-                  
-                  if (!isLikelyAnimal) {
-                    setAdminInputError("동물을 입력해 주세요");
-                    setTimeout(() => setAdminInputError("") , 2000);
-                    return;
-                  }
-                }
-                handleSetAnimal();
-              }}
+              onSetNumber={handleSetAnimal}
               onRandom={handleRandomAnimal}
-              disabled={false}
+              disabled={validatingAnimal}
             />
             {adminInputError && (
               <div className="mt-2 text-red-500 text-2xl sm:text-3xl font-bold animate-fade-in">{adminInputError}</div>
+            )}
+            {validatingAnimal && (
+              <div className="mt-2 text-blue-500 text-2xl sm:text-3xl font-bold animate-pulse">동물인지 확인 중...</div>
             )}
           </>
         )}

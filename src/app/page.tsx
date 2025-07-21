@@ -269,7 +269,7 @@ export default function HomePage() {
                 {usedHints.map((h, i) => (
                   <div
                     key={i}
-                    className="text-lg sm:text-xl text-yellow-600 dark:text-yellow-300 bg-yellow-50 dark:bg-gray-900 rounded px-3 py-2 shadow animate-fade-in w-fit max-w-[800px] whitespace-nowrap mx-auto text-left"
+                    className="text-lg sm:text-xl text-yellow-600 dark:text-yellow-300 bg-yellow-50 dark:bg-gray-900 rounded px-3 py-2 shadow animate-fade-in w-fit min-w-full max-w-[800px] whitespace-nowrap mx-auto text-left"
                   >
                     힌트 {i + 1}. {h}
                   </div>

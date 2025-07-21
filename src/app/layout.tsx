@@ -8,7 +8,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#2563eb" />
-        <title>동물을 맞춰줘!</title>
+        <title>동물을 맞춰라!</title>
       </head>
       <body>
         {/* 좌측 고정 광고 */}

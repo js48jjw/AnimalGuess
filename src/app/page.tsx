@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef } from "react";
 import TitleHeader from "../components/TitleHeader";
 import StartScreen from "../components/StartScreen";
 import AdminInput from "../components/AdminInput";
-import GuessInput from "../components/GuessInput";
 import GameResult from "../components/GameResult";
 import { fetchGeminiHint } from "../lib/utils";
 
@@ -213,37 +212,63 @@ export default function HomePage() {
         )}
         {step === "play" && (
           <>
-            <GuessInput
-              value={guessValue}
-              onChange={e => setGuessValue(e.target.value)}
-              onGuess={handleGuess}
-              onHint={handleHint}
-              onRevealAnswer={handleRevealAnswer}
-              hintDisabled={hintLoading}
-              disabled={false}
-              hintLoading={hintLoading}
-            />
-            {/* hintLimitError 팝업은 아래에서 렌더링 */}
+            <div className="mb-4 text-2xl font-bold text-center">동물을 찾아주세요</div>
+            <div className="flex gap-2 mb-4">
+              <button
+                type="button"
+                onClick={handleHint}
+                disabled={hintLoading}
+                className="flex-1 py-4 rounded-lg bg-gradient-to-r from-violet-400 to-pink-400 dark:from-violet-700 dark:to-pink-700 text-white text-xl font-bold shadow hover:scale-105 active:scale-95 transition-all disabled:opacity-60"
+                style={{ minWidth: 180, maxWidth: 320, width: '100%' }}
+              >{hintLoading ? '힌트 생성 중...' : '힌트'}</button>
+              <button
+                type="button"
+                onClick={handleRevealAnswer}
+                className="px-4 py-4 rounded-lg bg-gradient-to-r from-orange-400 to-red-400 dark:from-orange-700 dark:to-red-700 text-white text-sm font-bold shadow hover:scale-105 active:scale-95 transition-all disabled:opacity-60 ml-2"
+              >정답공개</button>
+            </div>
+            {(step === "play" || step === "result") && usedHints.length > 0 && (
+              <div className="my-0 w-[98vw] sm:w-[800px] flex flex-col gap-2">
+                {usedHints.map((h, i) => (
+                  <div key={i} className="text-lg sm:text-xl text-yellow-600 dark:text-yellow-300 bg-yellow-50 dark:bg-gray-900 rounded px-3 py-2 shadow animate-fade-in whitespace-nowrap w-fit min-w-full">
+                    힌트 {i + 1}. {h}
+                  </div>
+                ))}
+              </div>
+            )}
+            <form
+              className="flex flex-col items-center gap-4 w-full max-w-xs mx-auto py-8"
+              onSubmit={e => {
+                e.preventDefault();
+                handleGuess();
+              }}
+            >
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={guessValue}
+                  onChange={e => setGuessValue(e.target.value)}
+                  className="w-56 px-4 py-2 rounded-lg border border-purple-300 dark:border-purple-600 bg-white dark:bg-gray-800 text-2xl text-center tracking-widest font-mono focus:outline-none focus:ring-2 focus:ring-violet-400 dark:focus:ring-violet-700 transition-all"
+                  placeholder="동물명"
+                  autoFocus
+                />
+                <button
+                  type="submit"
+                  disabled={guessValue.length === 0}
+                  className="px-6 py-2 rounded-full bg-gradient-to-r from-purple-400 to-violet-400 dark:from-purple-700 dark:to-violet-700 text-black font-bold shadow hover:scale-105 active:scale-95 transition-all disabled:opacity-60"
+                >제출</button>
+              </div>
+            </form>
           </>
         )}
         {step === "result" && (
           <GameResult onRestart={handleRestart} answerAnimal={targetAnimal || ''} />
-        )}
-        {usedHints.length > 0 && (
-          <div className="my-0 w-[98vw] sm:w-[800px] flex flex-col gap-2">
-            {usedHints.map((h, i) => (
-              <div key={i} className="text-lg sm:text-xl text-yellow-600 dark:text-yellow-300 bg-yellow-50 dark:bg-gray-900 rounded px-3 py-2 shadow animate-fade-in whitespace-nowrap w-fit min-w-full">
-                힌트 {i + 1}. {h}
-              </div>
-            ))}
-          </div>
         )}
         {hintLimitError && (
           <div className="fixed top-1/3 left-1/2 -translate-x-1/2 bg-pink-500 text-white px-8 py-4 rounded-xl shadow-lg text-3xl font-bold z-50 animate-fade-in">
             {hintLimitError}
           </div>
         )}
-        {/* 힌트 제한 팝업 코드 제거됨 */}
         {showWrongPopup && (
           <div className="fixed top-1/3 left-1/2 -translate-x-1/2 bg-red-500 text-white px-8 py-4 rounded-xl shadow-lg text-3xl font-bold z-50 animate-fade-in">
             ❌ 오답입니다!

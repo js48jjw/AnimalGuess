@@ -1,6 +1,6 @@
 import "./globals.css";
 import React from "react";
-//import Script from "next/script";
+import Script from "next/script";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -11,12 +11,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <title>동물을 맞춰라!</title>
       </head>
       <body>
-        {/*
         {/* 좌측 고정 광고 */}
-        {/*
         <div style={{
           position: 'fixed',
-          left: 5,
+          left: 10,
           top: 30,
           height: '100vh',
           width: 160,
@@ -33,9 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           ></ins>
           <Script src="//t1.daumcdn.net/kas/static/ba.min.js" strategy="afterInteractive" />
         </div>
-        */}
         {/* 우측 고정 광고 */}
-        {/*
         <div style={{
           position: 'fixed',
           right: 16,
@@ -55,7 +51,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           ></ins>
           <Script src="//t1.daumcdn.net/kas/static/ba.min.js" strategy="afterInteractive" />
         </div>
-        */}
         {/* 메인 컨텐츠 */}
         {children}
       </body>

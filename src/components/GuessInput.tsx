@@ -36,13 +36,13 @@ const GuessInput: React.FC<GuessInputProps> = ({ value, onChange, onGuess, onHin
       >정답공개</button>
     </div>
     <div className="absolute bottom-0 left-0 w-full flex justify-center z-10 pb-8">
-      <div className="flex gap-2">
+      <div className="flex gap-2 w-full max-w-xs sm:max-w-sm">
         <input
           type="text"
           value={value}
           onChange={onChange}
           disabled={disabled}
-          className="w-56 px-4 py-2 rounded-lg border border-purple-300 dark:border-purple-600 bg-white dark:bg-gray-800 text-2xl text-center tracking-widest font-mono focus:outline-none focus:ring-2 focus:ring-violet-400 dark:focus:ring-violet-700 transition-all"
+          className="w-full px-4 py-2 rounded-lg border border-purple-300 dark:border-purple-600 bg-white dark:bg-gray-800 text-xl sm:text-2xl text-center tracking-widest font-mono focus:outline-none focus:ring-2 focus:ring-violet-400 dark:focus:ring-violet-700 transition-all"
           placeholder="동물명"
           autoFocus
         />

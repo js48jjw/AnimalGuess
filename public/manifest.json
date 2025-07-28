@@ -1,6 +1,6 @@
 {
-  "name": "Animal Guess",
-  "short_name": "Number?",
+  "name": "동물을 맞춰라",
+  "short_name": "Animal Guess",
   "description": "Animal Guess Game",
   "start_url": "/",
   "display": "standalone",
